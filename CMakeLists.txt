@@ -76,7 +76,7 @@ project(MspcSouthBridge ASM C CXX)
 
 pico_sdk_init()
 
-set(CMAKE_CPPFRONT_FLAGS "-fno-exceptions -fno-rtti")
+set(CMAKE_CPPFRONT_FLAGS "-fno-exceptions -fno-rtti" CACHE INTERNAL "")
 
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 set(common_flags "-Werror -Wall -Wextra -Wconversion -Wno-unused -Wshadow -Wpointer-arith -Wcast-qual -Wdouble-promotion -Wno-missing-braces ")

@@ -19,8 +19,12 @@ add_executable(mspc_south_bridge)
 
 target_sources(mspc_south_bridge 
   PRIVATE 
-    main.cpp
+    main.cpp2
     vector_table.S
+)
+
+use_cppfront(
+  TARGET mspc_south_bridge
 )
 
 set (YASLD_USE_CUSTOM_LINKER_SCRIPT ON)
