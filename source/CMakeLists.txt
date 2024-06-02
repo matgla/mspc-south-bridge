@@ -25,6 +25,8 @@ target_sources(mspc_south_bridge
 
 use_cppfront(
   TARGET mspc_south_bridge
+  MODULE_SOURCES
+    gpio.cpp2
 )
 
 set (YASLD_USE_CUSTOM_LINKER_SCRIPT ON)

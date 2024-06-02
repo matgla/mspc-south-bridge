@@ -1,5 +1,6 @@
+module;
 /**
- * main.cpp
+ * gpio.cpp2
  *
  * Copyright (C) 2024 Mateusz Stadnik <matgla@live.com>
  *
@@ -18,23 +19,17 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#include "pico/stdlib.h"
-
 #include <cstdio>
 
-import mspc.gpio;
+#include <hardware/gpio.h>
 
-main: () -> int = {
-  stdio_init_all();
-  printf("+-------------------------+\n");
-  printf("|    MSPC SOUTH BRIDGE    |\n");
-  printf("+-------------------------+\n");
+export module mspc.gpio;
 
-  power_on_board();
-   
-  while true
-  next sleep_ms(1000)
-  {
-    printf("It's working\n");
-  }
+gpio_power_enable: uint32_t == 16;
+
+export power_on_board: () -> void = {
+  printf("Powering on board\n"); 
+  gpio_init(gpio_power_enable);
+  gpio_set_dir(gpio_power_enable, GPIO_OUT);
+  gpio_put(gpio_power_enable, 1);
 }
