@@ -15,37 +15,21 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <https://www.gnu.org/licenses/>.
 #
-add_executable(mspc_south_bridge)
 
-target_sources(mspc_south_bridge 
-  PRIVATE 
-    main.cpp
-    vector_table.S
+message (STATUS "Adding simulation")
+
+find_package(renode_rp2040 REQUIRED)
+
+set (RENODE_BOARD_DIR ${renode_rp2040_SOURCE_DIR})
+set (RENODE_BINARY ${PROJECT_BINARY_DIR}/mspc_south_disk.img)
+
+configure_file(mspc.resc ${CMAKE_CURRENT_BINARY_DIR}/mspc.resc)
+
+add_custom_target(
+  run 
+  COMMAND ${renode_executable} --console --disable-xwt ${CMAKE_CURRENT_BINARY_DIR}/mspc.resc
+  DEPENDS mspc_south_disk ${CMAKE_CURRENT_BINARY_DIR}/mspc.resc
+  VERBATIM
+  USES_TERMINAL
 )
 
-set (YASLD_USE_CUSTOM_LINKER_SCRIPT ON)
-find_package(Yasld REQUIRED)
-list (APPEND CMAKE_MODULE_PATH ${Yasld_SOURCE_DIR}/cmake)
-
-target_link_libraries(mspc_south_bridge
-  PRIVATE 
-    pico_stdlib
-    yasld_standalone_executable_flags
-)
-
-target_link_options(mspc_south_bridge 
-  PRIVATE 
-    -T${PROJECT_SOURCE_DIR}/linker/south_bridge.ld
-    -Wl,--gc-sections
-)
-
-set_target_properties(mspc_south_bridge 
-  PROPERTIES LINK_DEPENDS
-    ${PROJECT_SOURCE_DIR}/linker/south_bridge.ld)
-
-include(ConvertElfToYasiff)
-
-convert_elf_to_yasiff(
-  TARGET mspc_south_bridge
-  TYPE executable
-)

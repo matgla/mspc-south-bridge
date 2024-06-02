@@ -1,7 +1,7 @@
 //
-//  vector_table.s
+//  vector_table.S
 // 
-//  Copyright (C) 2023 Mateusz Stadnik <matgla@live.com>
+//  Copyright (C) 2024 Mateusz Stadnik <matgla@live.com>
 // 
 //  This program is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -19,108 +19,135 @@
 //
 
 .syntax unified 
-.cpu cortex-m0plus 
+.cpu cortex-m0plus
 .thumb 
 
-.section .vector_table, "ax"
-.align 2
+#define PPB_BASE 0xe0000000
+#define M0PLUS_VTOR_OFFSET 0x0000ed08
+#define VECTOR_TABLE_SIZE 48
 
+.section .ram_vector_table, "ax" 
+.align 2 
 .global __vector_table
 __vector_table:
-  .word _stack_top
-  .word irq_reset
-  .word irq_nmi
-  .word irq_hard_fault
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_svcall
-  .word irq_reserved
-  .word irq_reserved
-  .word irq_pendsv
-  .word irq_systick
-  .word irq0
-  .word irq1
-  .word irq2
-  .word irq3 
-  .word irq4
-  .word irq5
-  .word irq6
-  .word irq7
-  .word irq8
-  .word irq9
-  .word irq10
-  .word irq11
-  .word irq12
-  .word irq13 
-  .word irq14
-  .word irq15
-  .word irq16
-  .word irq17
-  .word irq18
-  .word irq19
-  .word irq20
-  .word irq21
-  .word irq22
-  .word irq23 
-  .word irq24
-  .word irq25
-  .word irq26
-  .word irq27
-  .word irq28
-  .word irq29
-  .word irq30
-  .word irq31
+  .word 0x00000000 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq  
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq  
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
+  .word __unhandled_user_irq 
 
-.macro declare_irq_handler_breakpoint name
-.weak \name
-.type \name,%function
-.thumb_func
-\name:
+
+.text
+
+.weak __unhandled_user_irq 
+.type __unhandled_user_irq,%function
+.thumb_func 
+__unhandled_user_irq:
   bkpt #0 
-.endm
 
-declare_irq_handler_breakpoint irq_nmi
-declare_irq_handler_breakpoint irq_hard_fault
-declare_irq_handler_breakpoint irq_reserved
-declare_irq_handler_breakpoint irq_svcall
-declare_irq_handler_breakpoint irq_pendsv
-declare_irq_handler_breakpoint irq_systick
-declare_irq_handler_breakpoint irq0
-declare_irq_handler_breakpoint irq1
-declare_irq_handler_breakpoint irq2
-declare_irq_handler_breakpoint irq3 
-declare_irq_handler_breakpoint irq4
-declare_irq_handler_breakpoint irq5
-declare_irq_handler_breakpoint irq6
-declare_irq_handler_breakpoint irq7
-declare_irq_handler_breakpoint irq8
-declare_irq_handler_breakpoint irq9
-declare_irq_handler_breakpoint irq10
-declare_irq_handler_breakpoint irq11
-declare_irq_handler_breakpoint irq12
-declare_irq_handler_breakpoint irq13 
-declare_irq_handler_breakpoint irq14
-declare_irq_handler_breakpoint irq15
-declare_irq_handler_breakpoint irq16
-declare_irq_handler_breakpoint irq17
-declare_irq_handler_breakpoint irq18
-declare_irq_handler_breakpoint irq19
-declare_irq_handler_breakpoint irq20
-declare_irq_handler_breakpoint irq21
-declare_irq_handler_breakpoint irq22
-declare_irq_handler_breakpoint irq23 
-declare_irq_handler_breakpoint irq24
-declare_irq_handler_breakpoint irq25
-declare_irq_handler_breakpoint irq26
-declare_irq_handler_breakpoint irq27
-declare_irq_handler_breakpoint irq28
-declare_irq_handler_breakpoint irq29
-declare_irq_handler_breakpoint irq30
-declare_irq_handler_breakpoint irq31
+.global hardware_init_hook
+.type hardware_init_hook,%function 
+.thumb_func 
+hardware_init_hook:
+  mov pc, lr
 
+.global __register_frame_info
+.type __register_frame_info,%function
+.thumb_func 
+__register_frame_info:
+  mov pc, lr
+
+.global __libc_fini
+.type __libc_fini,%function 
+.thumb_func 
+__libc_fini:
+  mov pc, lr
+
+.global _entry_point
+.type _entry_point,%function
+.thumb_func 
+_entry_point:
+  adr r4, app_stack_pointer_symbol
+  ldr r4, [r4]
+  mov r5, r9
+  ldr r4, [r5, r4]
+  ldr r4, [r4]   
+  msr msp, r4
+  adr r4, __vector_table_symbol
+  ldr r4, [r4]
+  ldr r4, [r5, r4]
+  ldr r5, =(PPB_BASE + M0PLUS_VTOR_OFFSET)
+  str r4, [r5]
+  mov r5, r9
+  adr r4, runtime_init_symbol
+  ldr r4, [r4]
+  ldr r4, [r5, r4]
+  blx r4
+  adr r4, main_symbol 
+  ldr r4, [r4]
+  ldr r4, [r5, r4]
+  blx r4
+  
+  // we can't safely return from here 
+  mov r0, r9 
+  adr r1, _exit_symbol 
+  ldr r1, [r1]
+  ldr r1, [r0, r1]
+  blx r1
+  
+
+.align 4
+app_stack_pointer_symbol:
+  .word __app_stack_pointer(GOT)
+__vector_table_symbol:
+  .word __vector_table(GOT)
+main_symbol: 
+  .word main(GOT)
+_exit_symbol:
+  .word _exit(GOT)
+runtime_init_symbol:
+  .word runtime_init(GOT)
 

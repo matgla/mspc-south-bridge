@@ -18,28 +18,21 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#include <hardware/gpio.h>
-#include <hardware/uart.h>
+#include "pico/stdlib.h"
 
-#include <cstdlib>
-#include <cstring>
+#include <cstdio>
 
-int global;
-
-int main(int argc, char *argv[])
+int main()
 {
-  uart_init(uart0, 115200);
+  stdio_init_all();
 
-  gpio_set_function(0, GPIO_FUNC_UART);
-  gpio_set_function(1, GPIO_FUNC_UART);
-
-  uart_puts(uart0, "Hello from South Bridge!\n");
+  printf("+-------------------------+\n");
+  printf("|    MSPC SOUTH BRIDGE    |\n");
+  printf("+-------------------------+\n");
 
   while (true)
   {
-    ++global;
-    char buffer[100];
-    itoa(global, buffer, 16);
-    uart_puts(uart0, buffer);
+    printf("It's working\n");
+    sleep_ms(1000);
   }
 }

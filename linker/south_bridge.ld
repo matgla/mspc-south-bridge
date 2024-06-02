@@ -1,108 +1,133 @@
+/**
+ * south_bridge.ld
+ *
+ * Copyright (C) 2024 Mateusz Stadnik <matgla@live.com>
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version
+ * 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General
+ * Public License along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
+
 MEMORY 
 {
-  image (rwx) : ORIGIN = 0x00000000, LENGTH = 0xFFFFFFFF
-  scratch_x (rwx) : ORIGIN = 0x20040000, LENGTH = 4k 
-  scratch_y (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
+  image (rwx) : ORIGIN = 0x00000000, LENGTH = 0xffffffff
 }
 
-_heap_size = 0x4000;
-
-ENTRY(main)
+ENTRY(_entry_point)
 
 SECTIONS
 {
-    .text :
-    {
-        . = ALIGN(16);
-        *(.text) 
-        *(.text*)
-        *(.rel.text*)
-        *(.glue_7)
-        *(.glue_7t)
-        *(.eh_frame)
-        KEEP(*(.init))
-        KEEP(*(.fini))
-        *(.rodata)
-        *(.rodata*)
-        . = ALIGN(16);
-    } >image
+  .text :
+  {
+    . = ALIGN(16);
+    KEEP(*(.entry))
+    *(.reset) 
+    *(.text)
+    *(.text*)
+    *(.rel.text)
+    *(.rel.text*)
+    *(.glue_7)
+    *(.glue_7t)
+    *crtbegin.o(.ctors)
+    *crtbegin?.o(.ctors)
+    *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+    *(SORT(.ctors.*))
+    *(.ctors)
+    /* Followed by destructors */
+    *crtbegin.o(.dtors)
+    *crtbegin?.o(.dtors)
+    *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+    *(SORT(.dtors.*))
+    *(.dtors)
 
-    .data :
-    {
-        *(.ram_vector_table)
-        . = ALIGN(4);
-        . = ALIGN(16);
-        PROVIDE_HIDDEN(__mutex_array_start = .);
-        KEEP(*(SORT(.mutex_array.*)))
-        KEEP(*(.mutex_array))
-        PROVIDE_HIDDEN(__mutex_array_end = .);
-        
-        . = ALIGN(16);
-        PROVIDE_HIDDEN(__preinit_array_start = .);
-        KEEP(*(SORT(.preinit_array.*)))
-        KEEP(*(.preinit_array))
-        PROVIDE_HIDDEN(__preinit_array_end = .);
-        
-        . = ALIGN(16);
-        PROVIDE_HIDDEN(__init_array_start = .);
-        KEEP(*(SORT(.preinit_array.*)));
-        KEEP(*(.preinit_array))
-        PROVIDE_HIDDEN(__init_array_end = .);
+    *(.eh_frame*)
+ 
+    KEEP(*(.init))
+    KEEP(*(.fini))
+    *(.rodata)
+    *(.rodata*)
+    *(.ARM.extab*)
+    *(.ARM.exidx*)
+    *(.binary_info.*)
+    . = ALIGN(16);
+  } > image
 
-        . = ALIGN(16);
-        PROVIDE_HIDDEN(__fini_array_start = .);
-        *(SORT(.fini_array.*))
-        *(.fini_array)
-        PROVIDE_HIDDEN(__fini_array_end = .);
+  .init_arrays :
+  {
+    PROVIDE_HIDDEN(__init_array_start = .);
+    KEEP(*(SORT(.init_array.*)))
+    KEEP(*(.init_array))
+    PROVIDE_HIDDEN(__init_array_end = .);
+    . = ALIGN(4);
+    PROVIDE_HIDDEN(__fini_array_start = .);
+    *(SORT(.fini_array.*))
+    *(.fini_array)
+    PROVIDE_HIDDEN(__fini_array_end = .);
+    . = ALIGN(4);
+    PROVIDE_HIDDEN(__preinit_array_start = .);
+    KEEP(*(SORT(.preinit_array.*)))
+    KEEP(*(.preinit_array))
+    PROVIDE_HIDDEN(__preinit_array_end = .);
+  } > image
 
-        . = ALIGN(16);
-        *(.time_critical)
-        *(.time_critical*)
-        *(.data)
-        *(.data*)
-        
-        . = ALIGN(16);
-        PROVIDE(end = .);
-        . = . + _heap_size;
-        . = ALIGN(16);
-    } >image
+  .data :
+  {
+    . = ALIGN(4);
+    KEEP(*(.ram_vector_table))
+    . = ALIGN(4); 
+    PROVIDE_HIDDEN (__mutex_array_start = .);
+    KEEP(*(SORT(.mutex_array.*)))
+    KEEP(*(.mutex_array))
+    PROVIDE_HIDDEN (__mutex_array_end = .);
+    . = ALIGN(4);
+     __data_start__ = .;
 
-    .bss :
-    {
-        . = ALIGN(16);
-        *(.bss)
-        *(.bss*)
-        *(COMMON)
-        . = ALIGN(16);
-    } >image
+    *(.data)
+    *(.data*)
+    *(.time_critical)
+    *(.time_critical*)
+    . = ALIGN(16);
+    __data_end__ = .;
+  } > image 
 
-    .got :
-    {
-        *(.got*)
-    } >image
+  .bss :
+  {
+    . = ALIGN(16);
+    *(.bss)
+    *(.bss*)
+    *(COMMON)
+    . = ALIGN(16);
+  } > image
 
-    .ARM.exidx :
-    {
-        *(.ARM.exidx*)
-    } >image
+  .got :
+  {
+    *(.got*)
+  } > image
 
-    .ARM.extab.t : 
-    {
-        *(.ARM.extab*)
-    } >image
+  .dynsym :
+  {
+    *(.dynsym*)
+  } > image 
 
-    .stack1_dummy (COPY):
-    {
-      *(.stack1*)
-    } > scratch_x
+  .dynstr :
+  {
+    *(.dynstr*)
+  } > image
 
-    .stack_dummy (COPY):
-    {
-      *(.stack*)
-    } > scratch_y 
+  .dynamic : 
+  {
+    *(.dynamic*)
+  } > image
 
-    __StackTop = ORIGIN(scratch_y) + LENGTH(scratch_y);
-    __StackBottom = __StackTop - SIZEOF(.stack_dummy);
-    __StackLimit = ORIGIN(scratch_y);
 }
 

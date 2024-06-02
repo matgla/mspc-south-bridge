@@ -1,12 +1,38 @@
 {
   "dependencies": [
     {
+      "link": "https://github.com/matgla/Yasboot.git",
+      "type": "git",
+      "version": "main",
+      "options": {
+        "is_cmake_library": true
+      }
+    },
+    {
       "link": "https://github.com/raspberrypi/pico-sdk.git",
       "type": "git",
-      "version": "1.5.0",
-      "target": "picosdk",
+      "version": "1.5.1",
       "options": {
         "update_submodules": true,
+        "is_cmake_library": true
+      }
+    },
+    {
+      "link": "https://github.com/matgla/Renode_RP2040.git",
+      "type": "git",
+      "version": "main",
+      "target": "renode_rp2040",
+      "options": {
+        "cmake_variables": {},
+        "is_cmake_library": true
+      }
+    },
+    {
+      "link": "https://github.com/matgla/CMakeUtils.git",
+      "type": "git",
+      "version": "master",
+      "target": "CMakeUtils",
+      "options": {
         "is_cmake_library": true
       }
     },
@@ -14,8 +40,13 @@
       "link": "https://github.com/matgla/Yasld.git",
       "type": "git",
       "version": "main",
-      "target": "yasld",
-      "options": {}
+      "options": {
+        "cmake_variables": {
+          "YASLD_DISABLE_TESTS": "ON",
+          "YASLD_ONLY_CMAKE": "ON",
+          "YASLD_ARCH": "armv6-m"
+        }
+      }
     }
   ]
 }
