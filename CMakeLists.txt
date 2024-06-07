@@ -134,7 +134,7 @@ yasboot_create_disk(
   LAYOUT 
     ${PROJECT_BINARY_DIR}/disk/disk_layout.json
   YASBOOT_CONFIG
-    mspc
+    ${CMAKE_CURRENT_SOURCE_DIR}/config/.config
   DEPENDS
     generate_mspc_south_bridge.yaff
 )
