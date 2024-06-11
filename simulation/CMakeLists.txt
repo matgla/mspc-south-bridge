@@ -22,6 +22,7 @@ find_package(renode_rp2040 REQUIRED)
 
 set (RENODE_BOARD_DIR ${renode_rp2040_SOURCE_DIR})
 set (RENODE_BINARY ${PROJECT_BINARY_DIR}/mspc_south_disk.img)
+set (RENODE_NORTH_BRIDGE_BINARY ${PROJECT_SOURCE_DIR}/north_bridge/hello.elf)
 
 configure_file(mspc.resc ${CMAKE_CURRENT_BINARY_DIR}/mspc.resc)
 configure_file(south_bridge.resc ${CMAKE_CURRENT_BINARY_DIR}/south_bridge.resc)

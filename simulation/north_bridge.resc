@@ -6,12 +6,13 @@ include @initialize_rp2040.resc
 machine Pause 
 sysbus.cpu0 IsHalted true
 sysbus.cpu1 IsHalted true 
-#ec
-#showAnalyzer uart0
-# sysbus LoadBinary @${RENODE_BINARY} 0x10000000
-# 
-# cpu0 VectorTableOffset 0x10000200
-# cpu1 VectorTableOffset 0x10000200
+
+showAnalyzer uart0
+
+sysbus LoadELF @${RENODE_NORTH_BRIDGE_BINARY}
+ 
+cpu0 VectorTableOffset `sysbus GetSymbolAddress "__VECTOR_TABLE"`
+cpu1 VectorTableOffset `sysbus GetSymbolAddress "__VECTOR_TABLE"`
 
 machine StartGdbServer 3343
 
