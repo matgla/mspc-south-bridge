@@ -24,6 +24,8 @@ set (RENODE_BOARD_DIR ${renode_rp2040_SOURCE_DIR})
 set (RENODE_BINARY ${PROJECT_BINARY_DIR}/mspc_south_disk.img)
 
 configure_file(mspc.resc ${CMAKE_CURRENT_BINARY_DIR}/mspc.resc)
+configure_file(south_bridge.resc ${CMAKE_CURRENT_BINARY_DIR}/south_bridge.resc)
+configure_file(north_bridge.resc ${CMAKE_CURRENT_BINARY_DIR}/north_bridge.resc)
 
 add_custom_target(
   run 

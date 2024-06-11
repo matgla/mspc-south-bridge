@@ -1,0 +1,17 @@
+using sysbus
+path add @${RENODE_BOARD_DIR}
+$machine_name="mspc_north_bridge"
+include @initialize_rp2040.resc
+
+machine Pause 
+sysbus.cpu0 IsHalted true
+sysbus.cpu1 IsHalted true 
+#ec
+#showAnalyzer uart0
+# sysbus LoadBinary @${RENODE_BINARY} 0x10000000
+# 
+# cpu0 VectorTableOffset 0x10000200
+# cpu1 VectorTableOffset 0x10000200
+
+machine StartGdbServer 3343
+

@@ -1,13 +1,12 @@
-using sysbus
-path add @${RENODE_BOARD_DIR}
-$machine_name=mspc_south_bridge
-include @initialize_rp2040.resc
+include @north_bridge.resc
+include @south_bridge.resc
 
-showAnalyzer uart0
-sysbus LoadBinary @${RENODE_BINARY} 0x10000000
+emulation CreateGPIOConnector "gpio-connector"
+mach set "mspc_south_bridge"
+connector Connect sysbus.gpio gpio-connector
+gpio-connector SelectSourcePin sysbus.gpio 16
 
-cpu0 VectorTableOffset 0x10000200
-cpu1 VectorTableOffset 0x10000200
-
-machine StartGdbServer 3333
+mach set "mspc_north_bridge"
+connector Connect sysbus.poweron gpio-connector 
+gpio-connector SelectDestinationPin sysbus.poweron 1 
 
