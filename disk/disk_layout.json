@@ -7,7 +7,7 @@
       "length": "0xC0000",
       "bootable": false,
       "format": "raw",
-      "content": "/Users/mateusz/repos/mspc-south-bridge/build/source/mspc_south_bridge.yaff"
+      "content": "/home/mateusz/repos/mspc-south-bridge/build/source/mspc_south_bridge.yaff"
     },
     "0": {
       "start": "0x10000",

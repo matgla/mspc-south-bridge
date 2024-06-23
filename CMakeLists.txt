@@ -79,7 +79,7 @@ pico_sdk_init()
 set(CMAKE_CPPFRONT_FLAGS "-fno-exceptions -fno-rtti" CACHE INTERNAL "")
 
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
-set(common_flags "-Werror -Wall -Wextra -Wconversion -Wno-unused -Wshadow -Wpointer-arith -Wcast-qual -Wdouble-promotion -Wno-missing-braces ")
+set(common_flags "-Werror -Wall -Wextra -Wconversion -Wno-unused -Wshadow -Wpointer-arith -Wcast-qual -Wdouble-promotion -Wno-missing-braces -Wno-analyzer-infinite-loop")
 set(common_release_flags "") 
 set(common_debug_flags "-g")
 

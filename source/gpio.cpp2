@@ -25,10 +25,10 @@ module;
 
 export module mspc.gpio;
 
-gpio_power_enable: uint32_t == 16;
+gpio_power_enable: uint32_t == 15;
 
 export power_on_board: () -> void = {
-  printf("Powering on board\n"); 
+  printf("Powering on board: %ld\n", gpio_power_enable); 
   gpio_init(gpio_power_enable);
   gpio_set_dir(gpio_power_enable, GPIO_OUT);
   gpio_put(gpio_power_enable, 1);
